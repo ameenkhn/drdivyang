@@ -1,0 +1,15 @@
+<svg width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hero2-stroke" x1="14" y1="12" x2="43" y2="45" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1797AB"/>
+      <stop offset="1" stop-color="#0B274B"/>
+    </linearGradient>
+  </defs>
+  <path d="M17 18.5H41C43.7614 18.5 46 20.7386 46 23.5V33.5C46 36.2614 43.7614 38.5 41 38.5H28L20.5 44V38.5H17C14.2386 38.5 12 36.2614 12 33.5V23.5C12 20.7386 14.2386 18.5 17 18.5Z" stroke="url(#hero2-stroke)" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M21 24.5H37" stroke="url(#hero2-stroke)" stroke-width="2.8" stroke-linecap="round"/>
+  <path d="M21 29.5H33" stroke="url(#hero2-stroke)" stroke-width="2.8" stroke-linecap="round"/>
+  <path d="M21 34.5H29" stroke="url(#hero2-stroke)" stroke-width="2.8" stroke-linecap="round"/>
+  <circle cx="40.5" cy="31.5" r="5.5" fill="#8DE8F2"/>
+  <path d="M40.5 28.5V34.5" stroke="#0B274B" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M37.5 31.5H43.5" stroke="#0B274B" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
