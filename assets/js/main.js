@@ -25,40 +25,115 @@ initHeaderSticky();
 function initOffcanvasMenu() {
   var vlMenuWrap = $('.vl-mobile-menu-active > ul').clone();
   var vlSideMenu = $('.vl-offcanvas-menu nav');
+  var offcanvas = $('.vl-offcanvas');
+  var offcanvasOverlay = $('.vl-offcanvas-overlay');
+  var offcanvasLogo = $('.vl-offcanvas-logo');
+  var offcanvasClose = $('.vl-offcanvas-close-toggle');
+  var headerLogo = $('.vl-logo a').first().clone();
+  var bookUrl = 'https://drdivyangpatelmd.exlyapp.com/cb578edf-0916-4bcf-a2c8-b572f93a51ea';
 
   vlSideMenu.empty().append(vlMenuWrap);
+
+  if (headerLogo.length) {
+    offcanvasLogo.each(function () {
+      var logoSlot = $(this);
+
+      if (!logoSlot.children().length) {
+        logoSlot.append(headerLogo.clone());
+      }
+    });
+  }
+
+  offcanvasClose.each(function () {
+    $(this)
+      .attr({
+        type: 'button',
+        'aria-label': 'Close mobile menu'
+      })
+      .empty()
+      .append('<i class="fa-solid fa-xmark"></i>');
+  });
 
   // Add toggle button ONLY if submenu exists
   vlSideMenu.find('li').each(function () {
     if ($(this).children('.sub-menu, .vl-mega-menu').length > 0) {
-      $(this).append('<button class="vl-menu-close"><i class="fas fa-chevron-right"></i></button>');
+      $(this).append('<button class="vl-menu-close" type="button" aria-label="Toggle submenu" aria-expanded="false"><i class="fas fa-chevron-right"></i></button>');
     }
   });
 
+  vlSideMenu.find('a[href="#"]').addClass('dr-mobile-menu-parent');
+
+  if (!$('.dr-mobile-menu-actions').length) {
+    $('<div class="dr-mobile-menu-actions">' +
+        '<a href="' + bookUrl + '" class="vl-btn4">Book Consultation</a>' +
+        '<a href="tel:+919099268424" class="phone">Call Now</a>' +
+      '</div>').insertAfter('.vl-offcanvas-menu');
+  }
+
   // Toggle submenu ONLY via button
-  $('.vl-offcanvas-menu').on('click', 'button.vl-menu-close', function (e) {
+  $('.vl-offcanvas-menu')
+    .off('click.drOffcanvasToggle', 'button.vl-menu-close')
+    .on('click.drOffcanvasToggle', 'button.vl-menu-close', function (e) {
     e.preventDefault();
     var parentLi = $(this).parent();
+    var toggleButton = $(this);
 
     if (!parentLi.hasClass('active')) {
       parentLi.addClass('active');
       parentLi.children('.sub-menu, .vl-mega-menu').slideDown();
+      toggleButton.attr('aria-expanded', 'true');
     } else {
       parentLi.removeClass('active');
       parentLi.children('.sub-menu, .vl-mega-menu').slideUp();
+      toggleButton.attr('aria-expanded', 'false');
     }
   });
 
+  $('.vl-offcanvas-menu')
+    .off('click.drOffcanvasParent', 'a.dr-mobile-menu-parent')
+    .on('click.drOffcanvasParent', 'a.dr-mobile-menu-parent', function (e) {
+      e.preventDefault();
+      $(this).siblings('button.vl-menu-close').trigger('click');
+    });
+
+  $('.vl-offcanvas-menu')
+    .off('click.drOffcanvasLink', 'a')
+    .on('click.drOffcanvasLink', 'a', function () {
+      var href = $(this).attr('href') || '';
+
+      if (href && href !== '#' && !$(this).hasClass('dr-mobile-menu-parent')) {
+        closeOffcanvasMenu();
+      }
+    });
+
+  function openOffcanvasMenu() {
+    offcanvas.addClass("vl-offcanvas-open");
+    offcanvasOverlay.addClass("vl-offcanvas-overlay-open");
+    $('body').addClass('dr-menu-open');
+  }
+
+  function closeOffcanvasMenu() {
+    offcanvas.removeClass("vl-offcanvas-open");
+    offcanvasOverlay.removeClass("vl-offcanvas-overlay-open");
+    $('body').removeClass('dr-menu-open');
+  }
+
   // Open offcanvas
-  $(".vl-offcanvas-toggle").on('click', function () {
-    $(".vl-offcanvas").addClass("vl-offcanvas-open");
-    $(".vl-offcanvas-overlay").addClass("vl-offcanvas-overlay-open");
+  $(".vl-offcanvas-toggle").off('click.drOffcanvasOpen').on('click.drOffcanvasOpen', function () {
+    openOffcanvasMenu();
   });
 
   // Close offcanvas
-  $(".vl-offcanvas-close-toggle, .vl-offcanvas-overlay").on('click', function () {
-    $(".vl-offcanvas").removeClass("vl-offcanvas-open");
-    $(".vl-offcanvas-overlay").removeClass("vl-offcanvas-overlay-open");
+  $(".vl-offcanvas-close-toggle, .vl-offcanvas-overlay")
+    .off('click.drOffcanvasClose')
+    .on('click.drOffcanvasClose', function () {
+    closeOffcanvasMenu();
+  });
+
+  $(document).off('keydown.drOffcanvas').on('keydown.drOffcanvas', function (e) {
+    if (e.key === 'Escape') {
+      closeOffcanvasMenu();
+    }
   });
 }
 
@@ -170,7 +245,6 @@ function initDrFooterTemplate() {
 
       <div class="dr-footer-bottom">
         <p>© Copyright 2026 Dr. Divyang Patel. All rights reserved.</p>
-        <p>Designed for a fully responsive experience across desktop, tablet, and mobile.</p>
       </div>
     </div>
   `;
